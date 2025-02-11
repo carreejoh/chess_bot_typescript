@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { initialWhitePieces, initialBlackPieces } from "../other/chessLocations.ts"
+import { isThatValidMove } from "../chessLogic/isThatValidMove.ts"
+import { isThisCastling, rebuildCastlingVariables, rebuildCastlingVariablesWithoutCastling } from "../chessLogic/castling.ts"
+import { convertTileLocationToPiecename } from "../other/conversionFunctions.ts"
 
 import Board from "./board"
 
@@ -21,13 +24,82 @@ function Main() {
         hasBlackRookOneBeenMoved: false,
         hasBlackRookTwoBeenMoved: false
     })
+
+
+    // Change castling variables,
+    // Moves pieces in other function
+    const handleCastling = (moveToTile: string) => {
+        let castling = rebuildCastlingVariables(moveToTile, castlingVariables, whitePieces, blackPieces)
+        setCastlingVariables(castling.castleVariablesClone)
+        setWhitePieces(castling.whitePiecesClone)
+        setBlackPieces(castling.blackPiecesClone)
+        setWhitesTurn(!whitesTurn)
+    }
     
+
+    // Change the location of either players piece
+    // If the piece is a rook, or king, set that piece to false in castlingVariables
+    const changePiecePosition = (moveToTile: string, currentTile: string) => {
+        let piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
+        if (whitesTurn) {
+            setWhitePieces((prevPieces) => ({
+                ...prevPieces,
+                [piece]: moveToTile,
+            }));
+        } else {
+            setBlackPieces((prevPieces) => ({
+                ...prevPieces,
+                [piece]: moveToTile,
+            }));
+        }
+        // Check to see if a rook or king as been moved and set those variables to true
+        let accountForRookKingMovement = rebuildCastlingVariablesWithoutCastling(piece, castlingVariables)
+        setCastlingVariables(accountForRookKingMovement)
+    }
+
+
+    // Set either players piece to "na" based on tile
+    const handleCapture = (tile: string) => {
+        let piece = convertTileLocationToPiecename(tile, whitePieces, blackPieces)
+        if (!piece) return
+        if (!whitesTurn) {
+            setWhitePieces((prevPieces) => ({
+                ...prevPieces,
+                [piece]: "na",
+            }));
+        } else {
+            setBlackPieces((prevPieces) => ({
+                ...prevPieces,
+                [piece]: "na",
+            }));
+        }
+    }
+
 
     // Verify the user is attempting a legal move
     // If indeed legal move, handle any captures, and change the position
     const verifyAndMovePiece = (moveToTile: string, currentTile: string) => {
-        console.log(moveToTile)
-        console.log(currentTile)
+
+        // Verify that move is legal 
+        let validMove = isThatValidMove(whitePieces, blackPieces, castlingVariables, moveToTile, currentTile)
+        if(!validMove) return
+
+        // Check if this is a castling attempt
+        let castling = isThisCastling(whitePieces, blackPieces, moveToTile, currentTile)
+        if (castling) {
+            handleCastling(moveToTile)
+            return
+        }
+
+        if (validMove) {
+            // Board logic
+            // Delay by 150 ms for animations
+            setTimeout(() => {
+                handleCapture(moveToTile)
+                changePiecePosition(moveToTile, currentTile)
+                setWhitesTurn(!whitesTurn)
+            }, 150)
+        }
     }
 
 

@@ -48,7 +48,7 @@ export const initialWhitePieces: ChessPieces = {
     whitePawnThree: "c2",
     whitePawnFour: "d2",
     whitePawnFive: "e2",
-    whitePawnSix: "f2",
+    whitePawnSix: "f4",
     whitePawnSeven: "g3",
     whitePawnEight: "h2",
     whiteRookOne: "a1",
