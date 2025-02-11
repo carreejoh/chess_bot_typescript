@@ -6,20 +6,24 @@ interface PieceProps {
     index: number;
     tile: string;
     whitePieces: { [key: string]: string };
-    blackPieces: { [key: string]: string };    
+    blackPieces: { [key: string]: string };
+    handleBoardClick: (tile: string) => void     
 }
 
 function Piece({ 
     index, 
     tile, 
     whitePieces, 
-    blackPieces 
+    blackPieces,
+    handleBoardClick 
 }: PieceProps) {
 
     // Find out if the square is white or black, and if it contains a piece
     const isBlack = Math.floor(index / 8) % 2 === index % 2;
-    const matchingPieceWhite = Object.entries(whitePieces).find(([key, value]) => value === tile);
-    const matchingPieceBlack = Object.entries(blackPieces).find(([key, value]) => value === tile);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const matchingPieceWhite = Object.entries(whitePieces).find(([_, value]) => value === tile);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const matchingPieceBlack = Object.entries(blackPieces).find(([_, value]) => value === tile);
 
     return(
         <div
@@ -28,6 +32,7 @@ function Piece({
                 ${isBlack ? "bg-[#B98763]" : "bg-[#ECD6B1]"}
                 `
             }
+            onClick={() => handleBoardClick(tile)}
         >
             <div className="fixed mt-[70px] ml-[2px] text-xs text-gray-700">
                 {tile}

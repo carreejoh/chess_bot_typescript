@@ -5,11 +5,13 @@ import Piece from "./pieces"
 interface BoardProps {
     whitePieces: { [key: string]: string };
     blackPieces: { [key: string]: string };
+    handleBoardClick: (tile: string) => void 
 }
 
 function Board({
     whitePieces,
-    blackPieces
+    blackPieces,
+    handleBoardClick
 }: BoardProps) {
 
     // This logic builds the board 
@@ -32,6 +34,8 @@ function Board({
 
                     whitePieces={whitePieces}
                     blackPieces={blackPieces}
+
+                    handleBoardClick={handleBoardClick}
                 />
             ))}
         </div>
