@@ -1,17 +1,22 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { initialWhitePieces, initialBlackPieces } from "../other/chessLocations.ts"
 import { isThatValidMove } from "../chessLogic/isThatValidMove.ts"
 import { isThisCastling, rebuildCastlingVariables, rebuildCastlingVariablesWithoutCastling } from "../chessLogic/castling.ts"
 import { convertTileLocationToPiecename } from "../other/conversionFunctions.ts"
 import { calculateAnimations } from "../other/calculateAnimations.ts"
+import { isThisAPromotion } from "../chessLogic/promotion.ts"
+import { botOne } from "../bots/botOne.ts"
 
 import Board from "./board"
+import Promotion from "./promotion.tsx"
 
 function Main() {
 
     const [whitePieces, setWhitePieces] = useState(initialWhitePieces)
     const [blackPieces, setBlackPieces] = useState(initialBlackPieces)
     const [whitesTurn, setWhitesTurn] = useState(true)
+
+    const [showPromotion, setShowPromotion] = useState("na")
 
     // The last tile that was clicked
     const [lastClickedSquare, setLastClickedSquare] = useState("")
@@ -23,6 +28,21 @@ function Main() {
         dy: 0
     })
 
+    // // Bot implementation
+    useEffect(() => {
+        if (!whitesTurn) {
+            setTileToBeAnimated("");
+            setAnimations({
+                dx: 0,
+                dy: 0
+            });
+            setTimeout(() => {
+                let bot = botOne(whitePieces, blackPieces, castlingVariables)
+                console.log(bot)
+                verifyAndMovePiece(bot.moveToTile, bot.originalTile)
+            }, 200)
+        }
+    }, [whitesTurn])
 
     // Variables for castling
     const [castlingVariables, setCastlingVariables] = useState({
@@ -73,6 +93,10 @@ function Main() {
         // Check to see if a rook or king as been moved and set those variables to true
         let accountForRookKingMovement = rebuildCastlingVariablesWithoutCastling(piece, castlingVariables)
         setCastlingVariables(accountForRookKingMovement)
+        let accountForPromotions = isThisAPromotion(piece, moveToTile)
+        if (accountForPromotions) {
+            setShowPromotion(moveToTile)
+        }
     }
 
 
@@ -154,18 +178,25 @@ function Main() {
 
     return (
         <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-            <Board
-                whitePieces={whitePieces}
-                blackPieces={blackPieces}
-                castlingVariables={castlingVariables}
+            <div className="w-[700px] h-[700px] relative">
+                {showPromotion !== "na" && (
+                    <Promotion
+                        showPromotion={showPromotion}
+                    />
+                )}
+                <Board
+                    whitePieces={whitePieces}
+                    blackPieces={blackPieces}
+                    castlingVariables={castlingVariables}
 
-                handleBoardClick={handleBoardClick}
+                    handleBoardClick={handleBoardClick}
 
-                animations={animations}
-                tileToBeAnimated={tileToBeAnimated}
+                    animations={animations}
+                    tileToBeAnimated={tileToBeAnimated}
 
-                whitesTurn={whitesTurn}
-            />
+                    whitesTurn={whitesTurn}
+                />
+            </div>
         </div>
     )
 
