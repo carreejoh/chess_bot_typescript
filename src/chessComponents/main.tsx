@@ -4,8 +4,9 @@ import { isThatValidMove } from "../chessLogic/isThatValidMove.ts"
 import { isThisCastling, rebuildCastlingVariables, rebuildCastlingVariablesWithoutCastling } from "../chessLogic/castling.ts"
 import { convertTileLocationToPiecename } from "../other/conversionFunctions.ts"
 import { calculateAnimations } from "../other/calculateAnimations.ts"
-import { isThisAPromotion } from "../chessLogic/promotion.ts"
+import { isThisAPromotion, rebuildLocationsWithPromotion } from "../chessLogic/promotion.ts"
 import { botOne } from "../bots/botOne.ts"
+
 
 import Board from "./board"
 import Promotion from "./promotion.tsx"
@@ -17,6 +18,7 @@ function Main() {
     const [whitesTurn, setWhitesTurn] = useState(true)
 
     const [showPromotion, setShowPromotion] = useState("na")
+    const [promotionPawn, setPromotionPawn] = useState("")
 
     // The last tile that was clicked
     const [lastClickedSquare, setLastClickedSquare] = useState("")
@@ -29,20 +31,20 @@ function Main() {
     })
 
     // // Bot implementation
-    useEffect(() => {
-        if (!whitesTurn) {
-            setTileToBeAnimated("");
-            setAnimations({
-                dx: 0,
-                dy: 0
-            });
-            setTimeout(() => {
-                let bot = botOne(whitePieces, blackPieces, castlingVariables)
-                console.log(bot)
-                verifyAndMovePiece(bot.moveToTile, bot.originalTile)
-            }, 200)
-        }
-    }, [whitesTurn])
+    // useEffect(() => {
+    //     if (!whitesTurn) {
+    //         setTileToBeAnimated("");
+    //         setAnimations({
+    //             dx: 0,
+    //             dy: 0
+    //         });
+    //         setTimeout(() => {
+    //             let bot = botOne(whitePieces, blackPieces, castlingVariables)
+    //             console.log(bot)
+    //             verifyAndMovePiece(bot.moveToTile, bot.originalTile)
+    //         }, 200)
+    //     }
+    // }, [whitesTurn])
 
     // Variables for castling
     const [castlingVariables, setCastlingVariables] = useState({
@@ -62,6 +64,26 @@ function Main() {
         setTileToBeAnimated(currentTile);
         setAnimations(animationAngles);
     };
+
+
+    // Move piece, show selection modal
+    const handlePromotion = (moveToTile: string) => {
+        // Show the modal allowing user to select piece
+        setShowPromotion(moveToTile)
+        changePiecePosition(moveToTile, lastClickedSquare)
+    }
+
+    // 
+    const handlePromotionSelection = (selection: string) => {
+        // Get the pawn being promoted
+        let piece = convertTileLocationToPiecename(lastClickedSquare, whitePieces, blackPieces)
+        // Rebuild the white and black location objects with new promoted piece
+        let rebuilt = rebuildLocationsWithPromotion(whitePieces, blackPieces, piece, selection)
+        setWhitePieces(rebuilt.whiteClone)
+        setBlackPieces(rebuilt.blackClone)
+        setShowPromotion("na")
+        setWhitesTurn(!whitesTurn)
+    }
 
 
     // Change castling variables,
@@ -93,10 +115,6 @@ function Main() {
         // Check to see if a rook or king as been moved and set those variables to true
         let accountForRookKingMovement = rebuildCastlingVariablesWithoutCastling(piece, castlingVariables)
         setCastlingVariables(accountForRookKingMovement)
-        let accountForPromotions = isThisAPromotion(piece, moveToTile)
-        if (accountForPromotions) {
-            setShowPromotion(moveToTile)
-        }
     }
 
 
@@ -122,6 +140,8 @@ function Main() {
     // If indeed legal move, handle any captures, and change the position
     const verifyAndMovePiece = (moveToTile: string, currentTile: string) => {
 
+        let piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
+
         // Verify that move is legal 
         let validMove = isThatValidMove(whitePieces, blackPieces, castlingVariables, moveToTile, currentTile)
         if (!validMove) return
@@ -130,6 +150,13 @@ function Main() {
         let castling = isThisCastling(whitePieces, blackPieces, moveToTile, currentTile)
         if (castling) {
             handleCastling(moveToTile)
+            return
+        }
+
+        // Check to see if this is a promotion
+        let accountForPromotions = isThisAPromotion(piece, moveToTile)
+        if (accountForPromotions) {
+            handlePromotion(moveToTile)
             return
         }
 
@@ -182,7 +209,13 @@ function Main() {
                 {showPromotion !== "na" && (
                     <Promotion
                         showPromotion={showPromotion}
+                        handlePromotionSelection={handlePromotionSelection}
                     />
+                )}
+                {/* disable users from pressing anything until their piece is promoted */}
+                {showPromotion !== "na" && (
+                    <div className="absolute w-full h-full bg-black opacity-10">
+                    </div>    
                 )}
                 <Board
                     whitePieces={whitePieces}

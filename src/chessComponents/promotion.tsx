@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 
 interface PromotionProps {
     showPromotion: string;
+    handlePromotionSelection: (selection: string) => void
 }
 
 function Promotion({
-    showPromotion
+    showPromotion,
+    handlePromotionSelection
 }: PromotionProps) {
 
     // Where the position of the modal should be 
@@ -45,16 +47,16 @@ function Promotion({
     return(
         <div className="h-[180px] w-[180px] p-1 rounded-lg shadow-2xl bg-gray-500 z-[1000]" style={{position: "absolute", left: `${promotionPosition.x}px`, bottom: `${promotionPosition.y}px`}}>
             <div className="w-full h-full grid grid-cols-2 grid-rows-2">
-                <button className="col-span-1 row-span-1 flex items-center justify-center">
+                <button onClick={() => handlePromotionSelection("queen")} className="col-span-1 row-span-1 flex items-center justify-center">
                     <img alt="queen" className="w-[76px] h-[76px]" src={`/${isWhite ? "white_queen.png" : "black_queen.png"}`}/>
                 </button>
-                <button className="col-span-1 row-span-1 flex items-center justify-center">
+                <button onClick={() => handlePromotionSelection("rook")} className="col-span-1 row-span-1 flex items-center justify-center">
                     <img alt="rook" className="w-[76px] h-[76px]" src={`/${isWhite ? "white_rook.png" : "black_rook.png"}`}/>
                 </button>
-                <button className="col-span-1 row-span-1 flex items-center justify-center">
+                <button onClick={() => handlePromotionSelection("bishop")} className="col-span-1 row-span-1 flex items-center justify-center">
                     <img alt="bishop" className="w-[76px] h-[76px]" src={`/${isWhite ? "white_bishop.png" : "black_bishop.png"}`}/>
                 </button>
-                <button className="col-span-1 row-span-1 flex items-center justify-center">
+                <button onClick={() => handlePromotionSelection("knight")} className="col-span-1 row-span-1 flex items-center justify-center">
                     <img alt="knight" className="w-[76px] h-[76px]" src={`/${isWhite ? "white_knight.png" : "black_knight.png"}`}/>
                 </button>
             </div>

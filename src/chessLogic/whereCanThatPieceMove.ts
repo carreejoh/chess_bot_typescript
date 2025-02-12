@@ -20,6 +20,14 @@ export const whereCanThatPieceMove = (
 
     const pieceName = variableNamesToPieceType[matchingPiece];
 
+    // Don't calculate if the piece is captured
+    if(whitePieces[matchingPiece] && whitePieces[matchingPiece] === "na") {
+        return []
+    }
+    if(blackPieces[matchingPiece] && blackPieces[matchingPiece] === "na") {
+        return []
+    }
+
     let moves: string[] = [];
 
     if (pieceName === "pawn") {

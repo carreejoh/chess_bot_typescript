@@ -16,6 +16,7 @@ export const isThatValidMove = (
 
     // Get the pieceName
     const piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
+
     // Account for any pieces that are being attacked in a move
     const moveToPiece = convertTileLocationToPiecename(moveToTile,whitePieces, blackPieces)
 
