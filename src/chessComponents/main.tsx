@@ -3,6 +3,7 @@ import { initialWhitePieces, initialBlackPieces } from "../other/chessLocations.
 import { isThatValidMove } from "../chessLogic/isThatValidMove.ts"
 import { isThisCastling, rebuildCastlingVariables, rebuildCastlingVariablesWithoutCastling } from "../chessLogic/castling.ts"
 import { convertTileLocationToPiecename } from "../other/conversionFunctions.ts"
+import { calculateAnimations } from "../other/calculateAnimations.ts"
 
 import Board from "./board"
 
@@ -15,6 +16,14 @@ function Main() {
     // The last tile that was clicked
     const [lastClickedSquare, setLastClickedSquare] = useState("")
 
+    // Animations
+    const [tileToBeAnimated, setTileToBeAnimated] = useState("")
+    const [animations, setAnimations] = useState({
+        dx: 0,
+        dy: 0
+    })
+
+
     // Variables for castling
     const [castlingVariables, setCastlingVariables] = useState({
         hasWhiteKingBeenMoved: false,
@@ -26,6 +35,15 @@ function Main() {
     })
 
 
+    // This calculates the animations for the piece to be moved
+    const handleAnimations = (tile: string, currentTile: string) => {
+        if (tileToBeAnimated !== "") return;
+        const animationAngles = calculateAnimations(currentTile, tile);
+        setTileToBeAnimated(currentTile);
+        setAnimations(animationAngles);
+    };
+
+
     // Change castling variables,
     // Moves pieces in other function
     const handleCastling = (moveToTile: string) => {
@@ -35,7 +53,7 @@ function Main() {
         setBlackPieces(castling.blackPiecesClone)
         setWhitesTurn(!whitesTurn)
     }
-    
+
 
     // Change the location of either players piece
     // If the piece is a rook, or king, set that piece to false in castlingVariables
@@ -82,7 +100,7 @@ function Main() {
 
         // Verify that move is legal 
         let validMove = isThatValidMove(whitePieces, blackPieces, castlingVariables, moveToTile, currentTile)
-        if(!validMove) return
+        if (!validMove) return
 
         // Check if this is a castling attempt
         let castling = isThisCastling(whitePieces, blackPieces, moveToTile, currentTile)
@@ -92,6 +110,7 @@ function Main() {
         }
 
         if (validMove) {
+            handleAnimations(moveToTile, currentTile)
             // Board logic
             // Delay by 150 ms for animations
             setTimeout(() => {
@@ -99,6 +118,13 @@ function Main() {
                 changePiecePosition(moveToTile, currentTile)
                 setWhitesTurn(!whitesTurn)
             }, 150)
+            setTimeout(() => {
+                setTileToBeAnimated("");
+                setAnimations({
+                    dx: 0,
+                    dy: 0
+                });
+            }, 170);
         }
     }
 
@@ -127,12 +153,18 @@ function Main() {
 
 
     return (
-        <div className="w-[100vw] h-[100vh] bg-gray-200 flex items-center justify-center">
+        <div className="w-[100vw] h-[100vh] flex items-center justify-center">
             <Board
                 whitePieces={whitePieces}
                 blackPieces={blackPieces}
+                castlingVariables={castlingVariables}
 
                 handleBoardClick={handleBoardClick}
+
+                animations={animations}
+                tileToBeAnimated={tileToBeAnimated}
+
+                whitesTurn={whitesTurn}
             />
         </div>
     )

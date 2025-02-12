@@ -3,3 +3,25 @@
 @tailwind utilities;
 
 
+.chessboardBackground {
+    background-image: url('/paigepic2.jpeg');
+    /* Replace with your image path */
+    background-size: cover;
+    /* Ensures the image covers the entire div */
+    background-position: center;
+    /* Centers the image */
+    background-repeat: repeat;
+    /* Prevents the image from repeating */
+}
+
+.whatPlayerSeesOne {
+    box-shadow: inset 0 0 34px rgba(226, 206, 28, 0.9);
+}
+
+.whatPlayerSeesTwo {
+    box-shadow: inset 0 0 34px rgba(10, 126, 221, 0.9);
+}
+
+.whatPlayerSeesThree {
+    box-shadow: inset 0 0 45px rgba(99, 34, 221, 0.9);
+}
