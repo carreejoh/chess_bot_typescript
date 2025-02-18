@@ -5,7 +5,7 @@ import { isThisCastling, rebuildCastlingVariables, rebuildCastlingVariablesWitho
 import { convertTileLocationToPiecename } from "./other/conversionFunctions.ts"
 import { calculateAnimations } from "./other/calculateAnimations.ts"
 import { isThisAPromotion, rebuildLocationsWithPromotion } from "./chessLogic/promotion.ts"
-import { botOne } from "../bots/botOne.ts"
+// import { botOne } from "./bots/botOne.ts"
 
 
 import Board from "./chessComponents/board.tsx"
@@ -18,7 +18,7 @@ function Main() {
     const [whitesTurn, setWhitesTurn] = useState(true)
 
     const [showPromotion, setShowPromotion] = useState("na")
-    const [promotionPawn, setPromotionPawn] = useState("")
+    // const [promotionPawn, setPromotionPawn] = useState("")
 
     // The last tile that was clicked
     const [lastClickedSquare, setLastClickedSquare] = useState("")
@@ -76,9 +76,9 @@ function Main() {
     // 
     const handlePromotionSelection = (selection: string) => {
         // Get the pawn being promoted
-        let piece = convertTileLocationToPiecename(lastClickedSquare, whitePieces, blackPieces)
+        const piece = convertTileLocationToPiecename(lastClickedSquare, whitePieces, blackPieces)
         // Rebuild the white and black location objects with new promoted piece
-        let rebuilt = rebuildLocationsWithPromotion(whitePieces, blackPieces, piece, selection)
+        const rebuilt = rebuildLocationsWithPromotion(whitePieces, blackPieces, piece, selection)
         setWhitePieces(rebuilt.whiteClone)
         setBlackPieces(rebuilt.blackClone)
         setShowPromotion("na")
@@ -89,7 +89,7 @@ function Main() {
     // Change castling variables,
     // Moves pieces in other function
     const handleCastling = (moveToTile: string) => {
-        let castling = rebuildCastlingVariables(moveToTile, castlingVariables, whitePieces, blackPieces)
+        const castling = rebuildCastlingVariables(moveToTile, castlingVariables, whitePieces, blackPieces)
         setCastlingVariables(castling.castleVariablesClone)
         setWhitePieces(castling.whitePiecesClone)
         setBlackPieces(castling.blackPiecesClone)
@@ -100,7 +100,7 @@ function Main() {
     // Change the location of either players piece
     // If the piece is a rook, or king, set that piece to false in castlingVariables
     const changePiecePosition = (moveToTile: string, currentTile: string) => {
-        let piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
+        const piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
         if (whitesTurn) {
             setWhitePieces((prevPieces) => ({
                 ...prevPieces,
@@ -113,14 +113,14 @@ function Main() {
             }));
         }
         // Check to see if a rook or king as been moved and set those variables to true
-        let accountForRookKingMovement = rebuildCastlingVariablesWithoutCastling(piece, castlingVariables)
+        const accountForRookKingMovement = rebuildCastlingVariablesWithoutCastling(piece, castlingVariables)
         setCastlingVariables(accountForRookKingMovement)
     }
 
 
     // Set either players piece to "na" based on tile
     const handleCapture = (tile: string) => {
-        let piece = convertTileLocationToPiecename(tile, whitePieces, blackPieces)
+        const piece = convertTileLocationToPiecename(tile, whitePieces, blackPieces)
         if (!piece) return
         if (!whitesTurn) {
             setWhitePieces((prevPieces) => ({
@@ -140,21 +140,21 @@ function Main() {
     // If indeed legal move, handle any captures, and change the position
     const verifyAndMovePiece = (moveToTile: string, currentTile: string) => {
 
-        let piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
+        const piece = convertTileLocationToPiecename(currentTile, whitePieces, blackPieces)
 
         // Verify that move is legal 
-        let validMove = isThatValidMove(whitePieces, blackPieces, castlingVariables, moveToTile, currentTile)
+        const validMove = isThatValidMove(whitePieces, blackPieces, castlingVariables, moveToTile, currentTile)
         if (!validMove) return
 
         // Check if this is a castling attempt
-        let castling = isThisCastling(whitePieces, blackPieces, moveToTile, currentTile)
+        const castling = isThisCastling(whitePieces, blackPieces, moveToTile, currentTile)
         if (castling) {
             handleCastling(moveToTile)
             return
         }
 
         // Check to see if this is a promotion
-        let accountForPromotions = isThisAPromotion(piece, moveToTile)
+        const accountForPromotions = isThisAPromotion(piece, moveToTile)
         if (accountForPromotions) {
             handlePromotion(moveToTile)
             return
