@@ -38,7 +38,7 @@ function BubbleSort() {
     
 
     return (
-        <div className="col-span-12 h-96 bg-white shadow-md p-4">
+        <div className="w-[1360px] h- bg-white shadow-md p-4">
 
             <div className="flex items-end">
                 {arrayToBeSorted.map((number, index) => (
