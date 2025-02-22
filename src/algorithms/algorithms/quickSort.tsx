@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from "react"
 import Controls from "../components/controls";
+import QuickSortVisuals from "./components/quickSortVisuals";
 
 function QuickSort() {
 
 
     // Arrays purely for visuals
     const [pivotArray, setPivotArray] = useState<number[]>([])
+    const [finished, setFinished] = useState(false)
+
     const [arraysForVisual, setArraysForVisual] = useState<number[][][]>([
         [[13, 14, 3, 11, 10, 12, 20, 6, 6, 16, 4, 5, 2, 7, 17, 8, 9, 15, 19, 1, 18, 22]]
     ]);
-    const [finished, setFinished] = useState(false)
     // Array to be sorted by algorithm
     const [arrayToBeSorted, setArrayToBeSorted] = useState<number[]>([
         13, 14, 3, 11, 10, 12, 27, 6, 6, 16, 32, 5, 2, 7, 17, 8, 9, 15, 19, 1, 37, 22
@@ -50,9 +52,11 @@ function QuickSort() {
         }
 
         async function quickSort(array: number[]): Promise<number[]> {
+
             // Base case: arrays with 0 or 1 element are already sorted
             if (array.length <= 1) return array;
-
+            
+            // For visuals
             await new Promise((resolve) => setTimeout(resolve, speed));
 
             // Choose a pivot index at random and retrieve the pivot value
@@ -122,6 +126,7 @@ function QuickSort() {
                 setSpeed={setSpeed}
                 showBars={showBars}
                 setShowBars={setShowBars}
+                allowVisualToBeChanged={false}
                 inputArrayLength={inputArrayLength}
                 setInputArrayLength={setInputArrayLength}
                 maxLength={30}
@@ -130,69 +135,13 @@ function QuickSort() {
             <button onClick={() => runAlgorithm()} className="bg-orange-500 text-gray-800 text-sm shadow-md font-semibold pl-2 pr-2 p-1 rounded-md mb-3">
                 Run Algorithm
             </button>
-            {!showBars && (
-                <div className="min-h-48 flex flex-col items-center">
-                    {arraysForVisual.map((subArray, index) => {
-                        return (
-                            <div key={index} className="h-6 flex items-center">
-                                {subArray.map((array, index) => {
-
-                                    return (
-                                        <div key={index} className="flex items-center">
-                                            {array.map((number, index) => {
-
-                                                if (number === 999) {
-                                                    return (
-                                                        <div
-                                                            key={index}
-                                                            className="w-5 h-5 ml-0.5 mr-0.5">
-                                                        </div>
-                                                    )
-                                                } else {
-                                                    return (
-                                                        <div
-                                                            key={index}
-                                                            className={`${(array.length === 1 && pivotArray.includes(number)) ? "bg-blue-600" : "bg-gray-800"} w-5 h-5 ml-0.5 mr-0.5 text-center mt-[8px]`}
-                                                        >
-                                                            <h2 className="text-white font-semibold text-[13px]">{number}</h2>
-                                                        </div>
-                                                    )
-                                                }
-                                            })}
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        )
-                    })}
-                    <div className="flex items-center h-6">
-                        {finished && arrayToBeSorted.map((number, index) => (
-                            <div
-                                key={index}
-                                className={`${(pivotArray.includes(number)) ? "bg-blue-600" : "bg-gray-800"} w-5 h-5 ml-0.5 mr-0.5 text-center mt-[8px]`}
-                            >
-                                <h2 className="text-white font-semibold text-[13px]">{number}</h2>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-            {/* {showBars && (
-                <div className="flex items-end justify-center">
-                    {arrayToBeSorted.map((subArray, index) => (
-                        <div key={index} className="flex items-end ml-3 mr-3">
-                            {subArray.map((number, index) => (
-                                <div
-                                    style={{ height: `${number * 10}px` }}
-                                    className={`w-4 mr-1 bg-black`}
-                                    key={index}
-                                >
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-            )} */}
+            <QuickSortVisuals
+                showBars={showBars}
+                finished={finished}
+                arraysForVisual={arraysForVisual}
+                arrayToBeSorted={arrayToBeSorted}
+                pivotArray={pivotArray}
+            />
         </div>
     )
 }

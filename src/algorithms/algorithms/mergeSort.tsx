@@ -130,6 +130,7 @@ function MergeSort() {
                 setSpeed={setSpeed}
                 showBars={showBars}
                 setShowBars={setShowBars}
+                allowVisualToBeChanged={true}
                 inputArrayLength={inputArrayLength}
                 setInputArrayLength={setInputArrayLength}
                 maxLength={30}
