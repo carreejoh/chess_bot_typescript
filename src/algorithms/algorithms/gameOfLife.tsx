@@ -73,6 +73,9 @@ function GameOfLife() {
             await sleep(200)
             newGrid = updateGameOfLife(newGrid)
             setGrid(newGrid)
+            if(i === 199) {
+                setFunctionHasStarted(false)
+            }
         }
     }
 
