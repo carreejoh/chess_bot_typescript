@@ -2,6 +2,7 @@
 import BubbleSort from "./algorithms/bubbleSort"
 import MergeSort from "./algorithms/mergeSort"
 import QuickSort from "./algorithms/quickSort"
+import GameOfLife from "./algorithms/gameOfLife"
 
 function AlgorithmsMain() {
     
@@ -11,6 +12,7 @@ function AlgorithmsMain() {
         {/* <BubbleSort/> */}
         <MergeSort/>
         <QuickSort/>
+        <GameOfLife/>
 
         </div>
 

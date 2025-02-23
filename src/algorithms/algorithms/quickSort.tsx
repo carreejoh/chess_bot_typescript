@@ -129,7 +129,7 @@ function QuickSort() {
                 allowVisualToBeChanged={false}
                 inputArrayLength={inputArrayLength}
                 setInputArrayLength={setInputArrayLength}
-                maxLength={30}
+                maxLength={50}
                 randomize={randomize}
             />
             <button onClick={() => runAlgorithm()} className="bg-orange-500 text-gray-800 text-sm shadow-md font-semibold pl-2 pr-2 p-1 rounded-md mb-3">
