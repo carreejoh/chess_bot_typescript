@@ -37,7 +37,6 @@ function GameOfLife() {
             const downLeft = currentGrid[rowIndex + 1]?.[columnIndex - 1];
             const left = currentGrid[rowIndex]?.[columnIndex - 1];
             const upLeft = currentGrid[rowIndex - 1]?.[columnIndex - 1];
-
             return [up, upRight, right, downRight, down, downLeft, left, upLeft];
         }
 

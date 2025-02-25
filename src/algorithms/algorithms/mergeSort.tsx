@@ -1,10 +1,29 @@
 
+import { useEffect, useState, useContext, useRef } from "react"
+import MinecraftEnabled from "../../context/minecraftContext";
 
-import { useEffect, useState } from "react"
 import Controls from "../components/controls";
 
 function MergeSort() {
 
+    const minecraft = useContext(MinecraftEnabled);
+    const [hasBeenMined, setHasBeenMined] = useState<string[]>([])
+
+    const timerRef = useRef<number | null>(null);
+
+    const handleMouseDown = (location: string) => {
+        timerRef.current = window.setTimeout(() => {
+            console.log("has been 2 seconds", location)
+            setHasBeenMined(prev => [...prev, location])
+        }, 400);
+    };
+
+    const handleMouseUpOrLeave = () => {
+        if (timerRef.current !== null) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+    };
 
     // Array purely for visuals
     const [arraysForVisual, setArraysForVisual] = useState<number[][][]>([
@@ -39,8 +58,8 @@ function MergeSort() {
     async function runAlgorithm() {
 
         let tempHolder = [...arrayToBeSorted];
-        
-        if(arraysForVisual.length > 1) {
+
+        if (arraysForVisual.length > 1) {
             setArraysForVisual([tempHolder])
         }
 
@@ -160,9 +179,9 @@ function MergeSort() {
                             ))}
                         </div>
                     ))}
-                </div>    
+                </div>
             )}
-            {showBars && (
+            {showBars && !minecraft && (
                 <div className="flex items-end justify-center">
                     {arrayToBeSorted.map((subArray, index) => (
                         <div key={index} className="flex items-end ml-3 mr-3">
@@ -172,6 +191,49 @@ function MergeSort() {
                                     className={`w-4 mr-1 bg-black`}
                                     key={index}
                                 >
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            )}
+            {showBars && minecraft && (
+                <div className="flex items-end justify-center">
+                    {arrayToBeSorted.map((subArray, index) => (
+                        <div key={index} className="flex items-end ml-3 mr-3">
+                            {subArray.map((number, index) => (
+                                // <div
+                                //     style={{ height: `${number * 20}px` }}
+                                //     className={`w-4 mr-1 bg-black`}
+                                //     key={index}
+                                // >
+                                // </div>
+                                <div key={index}>
+                                    {Array.from({ length: number }, (_, i) => {
+
+                                        console.log(number)
+
+                                        if (hasBeenMined.includes(`${subArray[index]},${i}`)) {
+                                            return (
+                                                <div key={i} className="w-[20px] h-[20px]">
+                                                </div>
+                                            )
+                                        } else {
+                                            return (
+                                                <div key={i}>
+                                                    <img
+                                                        onMouseDown={() => handleMouseDown(`${subArray[index]},${i}`)}
+                                                        // onMouseDown={handleMouseDown}
+                                                        onMouseUp={handleMouseUpOrLeave}
+                                                        onMouseLeave={handleMouseUpOrLeave}
+                                                        src="/oakLog.png"
+                                                        className="mr-1"
+                                                    />
+                                                </div>
+                                            )
+                                        }
+
+                                    })}
                                 </div>
                             ))}
                         </div>
