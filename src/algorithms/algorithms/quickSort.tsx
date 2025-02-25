@@ -119,7 +119,7 @@ function QuickSort() {
     }
 
     return (
-        <div className="w-[1360px] bg-white shadow-md rounded-md p-4 pt-3 mt-12">
+        <div className="w-[1356px] bg-white shadow-md rounded-md p-4 pt-3 mt-12">
             <h1 className="font-semibold text-lg">Quick Sort</h1>
             <Controls
                 speed={speed}

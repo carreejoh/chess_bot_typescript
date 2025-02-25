@@ -1,8 +1,8 @@
 
-import BubbleSort from "./algorithms/bubbleSort"
 import MergeSort from "./algorithms/mergeSort"
 import QuickSort from "./algorithms/quickSort"
 import GameOfLife from "./algorithms/gameOfLife"
+import BreadthFirstSearch from "./algorithms/breadthFirstSearch"
 
 function AlgorithmsMain() {
     
@@ -12,6 +12,7 @@ function AlgorithmsMain() {
         {/* <BubbleSort/> */}
         <MergeSort/>
         <QuickSort/>
+        <BreadthFirstSearch/>
         <GameOfLife/>
 
         </div>

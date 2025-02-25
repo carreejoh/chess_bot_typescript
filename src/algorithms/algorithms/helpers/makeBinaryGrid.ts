@@ -1,6 +1,3 @@
-
-
-// Helper function: Given a zero-indexed number, returns an Excel-style column label (e.g., 0 -> "A", 25 -> "Z", 26 -> "AA")
 function getColumnLabel(n: number) {
     let label = '';
     while (n >= 0) {
@@ -22,17 +19,34 @@ for (let i = 1; i <= 100; i++) {
     rows.push(i.toString());
 }
 
-function createGrid(numRows: number, numCols: number, initialValue = 0) {
+export const createGrid = (numRows: number, numCols: number, initialValue = 0) => {
     const grid = [];
     for (let i = 0; i < numRows; i++) {
-        // Create a new array for each row, initialized with a default value (like 0 or false)
         const row = new Array(numCols).fill(initialValue);
         grid.push(row);
     }
     return grid;
 }
 
-export const getGrid = () => {
-    const grid = createGrid(36, 100)
-    return grid
-}
+export const createGridForMaze = (numRows: number, numCols: number, initialValue = 0) => {
+    const grid = [];
+    for (let i = 0; i < numRows; i++) {
+        const row = new Array(numCols).fill(initialValue);
+        grid.push(row);
+    }
+
+    // Make walls 
+    grid[0].fill(1)
+    grid[35].fill(1)
+
+    grid.forEach((row) => {
+        row[0] = 1
+        row[99] = 1
+    })
+
+    // Entrance and exit
+    grid[0][1] = 0
+    grid[35][98] = 0
+
+    return grid;
+  }

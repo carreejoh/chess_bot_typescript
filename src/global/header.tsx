@@ -6,8 +6,11 @@ function Header() {
             <Link className="mr-6" to="/chess">
                 <h2>Chess</h2>
             </Link>
-            <Link className="" to="/searchAlgorithms">
+            <Link className="mr-6" to="/searchAlgorithms">
                 <h2>Algorithms</h2>
+            </Link>
+            <Link to="/statistics">
+                <h2>Statistics</h2>
             </Link>
         </div>
     )

@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { getGrid } from "./helpers/gameOfLife";
+import { createGrid } from "./helpers/makeBinaryGrid";
 
 function GameOfLife() {
 
-    const [grid, setGrid] = useState<number[][]>(getGrid());
+    const [grid, setGrid] = useState<number[][]>(createGrid(36, 100));
     const [functionHasStarted, setFunctionHasStarted] = useState(false)
 
     // This allows users to set their own starting tiles
     function addOrRemoveStartingTile(rowIndex: number, columnIndex: number) {
+
         setGrid(prevGrid => {
           const newGrid = prevGrid.map(row => [...row]);
           newGrid[rowIndex][columnIndex] = newGrid[rowIndex][columnIndex] === 0 ? 1 : 0;
@@ -82,7 +83,7 @@ function GameOfLife() {
 
 
     return (
-        <div className="w-[1360px] bg-white shadow-md rounded-md p-4 pt-3 mt-12">
+        <div className="w-[1356px] bg-white shadow-md rounded-md p-4 pt-3 mt-12">
             <h1 className="font-semibold text-lg">Conway's Game of Life</h1>
             <button onClick={() => runAlgorithm()} className="bg-orange-500 text-gray-800 text-sm shadow-md font-semibold pl-2 pr-2 p-1 rounded-md mb-3 mt-2">
                 Run Algorithm
